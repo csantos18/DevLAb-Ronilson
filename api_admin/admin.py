@@ -41,3 +41,5 @@ class UsuarioAdmin(admin.ModelAdmin):
     search_fields = ('username', 'email')
     list_filter = ('is_staff', 'is_active')
     # filter_horizontal removido para evitar erros
+
+
