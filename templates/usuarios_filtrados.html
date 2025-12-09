@@ -1,0 +1,13 @@
+{% extends "home.html" %}
+
+{% block content %}
+<h2>Usuários: {{ tipo|capfirst }}</h2>
+<ul>
+    {% for usuario in usuarios %}
+        <li>{{ usuario.username }} - {{ usuario.tipo }}</li>
+    {% empty %}
+        <li>Nenhum usuário encontrado.</li>
+    {% endfor %}
+</ul>
+<a href="{% url 'home' %}">Voltar</a>
+{% endblock %}

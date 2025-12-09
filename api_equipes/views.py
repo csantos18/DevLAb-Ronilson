@@ -1,11 +1,9 @@
 from django.shortcuts import render
-
-# Create your views here.
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from .models import Equipe
 from .serializers import EquipeSerializer
-from .permissions import IsProfessorOrCoordenador
+from .permissions import IsProfessorOrCoordenador  # type: ignore
 
 # POST /equipes/criar
 class CriarEquipeView(generics.CreateAPIView):

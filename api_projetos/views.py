@@ -15,7 +15,6 @@ def home(request):
     projetos = Projeto.objects.all()
     usuarios = Usuario.objects.all()
 
-    
     query = request.GET.get('q')
     if query:
         projetos = projetos.filter(titulo__icontains=query)
@@ -77,3 +76,18 @@ def redirecionar_usuario(request):
     if request.user.is_superuser:
         return redirect('/admin/')
     return redirect('home')
+
+
+# ================= Funções adicionais para a home =================
+@login_required(login_url='login')
+def lista_projetos(request):
+    projetos = Projeto.objects.all()
+    context = {'projetos': projetos}
+    return render(request, 'lista_projetos.html', context)
+
+
+@login_required(login_url='login')
+def lista_equipes(request):
+    participacoes = ParticipacaoProjeto.objects.all()
+    context = {'participacoes': participacoes}
+    return render(request, 'lista_equipes.html', context)

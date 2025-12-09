@@ -16,9 +16,9 @@ def usuario_tem_permissao(request):
 
 @admin.register(Equipe)
 class EquipeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'nome', 'descricao', 'criado_em')
+    list_display = ('id', 'nome', 'descricao',)
     search_fields = ('nome',)
-    list_filter = ('criado_em',)
+    # list_filter = ('criado_em',)  # removido, pois não existe no modelo
     ordering = ('id',)
 
     # Bloqueia adicionar equipe para quem não é professor/coordenador
@@ -35,5 +35,4 @@ class EquipeAdmin(admin.ModelAdmin):
 
     # Bloqueia visualização
     def has_view_permission(self, request, obj=None):
-        return usuario_tem_permissao(request)
-
+        return usuario_tem_permissao(request) 

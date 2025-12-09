@@ -1,30 +1,34 @@
 from django.contrib import admin
 from django.urls import path, include
-from api_projetos import views
+from api_projetos import views as projetos_views
+from api_usuarios import views as usuarios_views
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # Página inicial (só acessa logado)
-    path('', views.home, name='home'),
+    # Home
+    path('', projetos_views.home, name='home'),
 
-    # Login
+    # Login e Logout
     path(
         'accounts/login/',
         auth_views.LoginView.as_view(template_name='registration/login.html'),
         name='login'
     ),
-
-    # Logout
     path(
         'accounts/logout/',
-        views.sair,  # usando a view de logout do views.py
+        projetos_views.sair,  # logout está em views de projetos
         name='logout'
     ),
 
     # Redirecionamento pós-login
-    path('accounts/redirect/', views.redirecionar_usuario, name='redirect_user'),
+    path('accounts/redirect/', projetos_views.redirecionar_usuario, name='redirect_user'),
+
+    # Botões flutuantes da home
+    path('usuarios/<str:tipo>/', usuarios_views.usuarios_filtrados, name='usuarios_filtrados'),
+    path('projetos/lista/', projetos_views.lista_projetos, name='lista_projetos'),
+    path('equipes/lista/', projetos_views.lista_equipes, name='lista_equipes'),
 
     # APIs
     path('api/alunos/', include('api_usuarios.urls')),
