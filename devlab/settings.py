@@ -22,6 +22,8 @@ INSTALLED_APPS = [
     
     'api_usuarios',
     'api_projetos',
+    'api_equipes',
+    
 
     
     'rest_framework',
