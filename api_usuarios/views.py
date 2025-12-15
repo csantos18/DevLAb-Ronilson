@@ -1,45 +1,64 @@
-from rest_framework import viewsets, permissions
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Usuario
-from .serializers import UsuarioSerializer
+from .forms import EditarPerfilForm
 
-# ---------------- PERMISSÕES ----------------
-class IsCoordenador(permissions.BasePermission):
-    def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.tipo == 'coordenador'
 
-class IsProfessor(permissions.BasePermission):
-    def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.tipo == 'professor'
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
-# ---------------- VIEWSET USUÁRIOS ----------------
-class UsuarioViewSet(viewsets.ModelViewSet):
-    queryset = Usuario.objects.all()
-    serializer_class = UsuarioSerializer
+        usuario = authenticate(request, username=username, password=password)
 
-    def get_permissions(self):
-        user = self.request.user
-        if self.request.method in ['POST', 'PUT', 'PATCH', 'DELETE']:
-            if user.tipo == 'coordenador' or user.tipo == 'professor':
-                return [permissions.IsAuthenticated()]
+        if usuario:
+            login(request, usuario)
+
+            # Redireciona de acordo com o tipo
+            if usuario.tipo == 'coordenador':
+                return redirect('home_coordenador')
+            elif usuario.tipo == 'professor':
+                return redirect('home_professor')
+            elif usuario.tipo == 'estudante':
+                return redirect('home_estudante')
             else:
-                return [permissions.IsAdminUser()]  # estudante não pode alterar
-        return [permissions.IsAuthenticated()]
+                messages.error(request, "Tipo de usuário inválido.")
+                logout(request)
+                return redirect('login')
+        else:
+            messages.error(request, "Usuário ou senha incorretos.")
 
-    def get_queryset(self):
-        user = self.request.user
-        if user.tipo == 'estudante':
-            return Usuario.objects.filter(id=user.id)
-        elif user.tipo == 'professor':
-            return Usuario.objects.filter(tipo='estudante')
-        return Usuario.objects.all()
+    return render(request, 'registration/login.html')
 
-# ---------------- FILTRAR USUÁRIOS ----------------
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+
+
+# ----------------------------
+# View para editar perfil
+# ----------------------------
 @login_required
-def usuarios_filtrados(request, tipo):
-    """
-    Filtra usuários por tipo: 'estudante', 'professor' ou 'coordenador'
-    """
-    usuarios = Usuario.objects.filter(tipo=tipo)
-    return render(request, 'usuarios_filtrados.html', {'usuarios': usuarios, 'tipo': tipo})
+def editar_perfil(request):
+    if request.method == 'POST':
+        form = EditarPerfilForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Perfil atualizado com sucesso!")
+            return redirect('home_estudante')
+    else:
+        form = EditarPerfilForm(instance=request.user)
+
+    return render(request, 'editar_perfil.html', {'form': form})
+
+
+# ----------------------------
+# View para VER PERFIL (nº 3)
+# ----------------------------
+@login_required
+def ver_perfil(request):
+    return render(request, 'ver_perfil.html', {
+        'usuario': request.user
+    })

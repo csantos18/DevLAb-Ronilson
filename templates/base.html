@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>DevLab</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+
+            /* FUNDO GLOBAL */
+            background: url("{% static 'img/fundo.jpg' %}") no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        header {
+            background-color: rgba(0, 119, 204, 0.9);
+            color: white;
+            padding: 15px 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        main {
+            padding: 20px;
+
+            /* FUNDO ESCURO PARA LEITURA */
+            background: rgba(0, 0, 0, 0.6);
+            min-height: calc(100vh - 70px);
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background: white;
+            color: black;
+        }
+
+        table th, table td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #0077cc;
+            color: white;
+        }
+
+        button {
+            background-color: #0077cc;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #005fa3;
+        }
+
+        a.button-link {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>DevLab</h1>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+</body>
+</html>

@@ -61,15 +61,21 @@
             color: #ff6961;
             margin-bottom: 10px;
         }
+
+        .messages {
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
     <div class="login-box">
         <h1>Login DevLab</h1>
 
-        {% if form.errors %}
-            <div class="error">
-                Usuário ou senha inválidos.
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="error">{{ message }}</div>
+                {% endfor %}
             </div>
         {% endif %}
 

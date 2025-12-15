@@ -58,6 +58,9 @@
             border-left: 4px solid #2008f6ff;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         a {
             color: #3498db;
@@ -71,7 +74,7 @@
 <body>
     <header>
         <h1>Projetos</h1>
-        <a href="{% url 'home' %}">Voltar</a>
+        <a href="{% url 'home_estudante' %}">Voltar</a>
     </header>
 
     <main>
@@ -83,9 +86,16 @@
         <ul>
             {% for projeto in projetos %}
                 <li>
-                    <strong>{{ projeto.titulo }}</strong><br>
-                    Cliente: {{ projeto.cliente }}<br>
-                    Status: {{ projeto.status }}
+                    <div>
+                        <strong>{{ projeto.titulo }}</strong><br>
+                        Cliente: {{ projeto.cliente }}<br>
+                        Status: {{ projeto.status }}
+                    </div>
+                    <div>
+                        <a href="{% url 'criar_equipe' projeto.id %}">
+                            <button>Criar Equipe</button>
+                        </a>
+                    </div>
                 </li>
             {% empty %}
                 <li>Nenhum projeto encontrado.</li>

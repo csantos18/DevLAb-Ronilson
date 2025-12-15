@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Meu Perfil</h1>
+
+<div style="
+    max-width: 500px;
+    background: rgba(255,255,255,0.95);
+    padding: 20px;
+    border-radius: 8px;
+    color: black;
+">
+
+    <p><strong>Usuário:</strong> {{ usuario.username }}</p>
+    <p><strong>Nome:</strong> {{ usuario.first_name }}</p>
+    <p><strong>Sobrenome:</strong> {{ usuario.last_name }}</p>
+    <p><strong>Email:</strong> {{ usuario.email }}</p>
+    <p><strong>Tipo:</strong> {{ usuario.tipo }}</p>
+
+    {% if usuario.matricula %}
+        <p><strong>Matrícula:</strong> {{ usuario.matricula }}</p>
+    {% endif %}
+
+    <div style="margin-top:20px;">
+        <a href="{% url 'editar_perfil' %}">
+            <button>Editar Perfil</button>
+        </a>
+
+        <a href="{% url 'home_estudante' %}">
+            <button style="margin-left:10px;">Voltar</button>
+        </a>
+    </div>
+</div>
+
+{% endblock %}

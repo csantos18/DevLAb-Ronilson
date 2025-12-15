@@ -1,112 +1,111 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from rest_framework import viewsets, permissions
-from django.contrib.auth import logout
-from .models import Projeto, ParticipacaoProjeto
-from .serializers import ProjetoSerializer, ParticipacaoProjetoSerializer
-from api_usuarios.models import Usuario
+
+from .models import Projeto, Equipe, ParticipacaoEquipe
+from .forms import ProjetoForm
+from api_usuarios.forms import CriarEquipeForm
 
 
-@login_required(login_url='login')
-def home(request):
-    """
-    Página inicial do sistema.
-    Decide qual home renderizar conforme o tipo do usuário.
-    """
-    user = request.user
+# =========================
+# HOME COORDENADOR
+# =========================
+@login_required
+def home_coordenador(request):
+    if request.user.tipo != 'coordenador':
+        return redirect('login')
 
     projetos = Projeto.objects.all()
-    usuarios = Usuario.objects.all()
+    equipes = Equipe.objects.all()
 
-    query = request.GET.get('q')
-    if query:
-        projetos = projetos.filter(titulo__icontains=query)
-        usuarios = usuarios.filter(username__icontains=query)
-
-    context = {
-        'projetos': projetos,
-        'usuarios': usuarios,
-    }
-
-    tipo = (user.tipo or '').strip().lower()
-
-    if tipo in ['estudante', 'aluno']:
-        return render(request, 'home_estudante.html', context)
-
-    elif tipo in ['professor', 'professora']:
-        return render(request, 'home_professor.html', context)
-
-    elif tipo in ['coordenador', 'coordenadora', 'coordenação']:
-        return render(request, 'home_coordenador.html', context)
-
-    # Fallback visível (debug)
     return render(
         request,
-        'home.html',
-        {**context, 'erro_tipo': f'Tipo não reconhecido: "{user.tipo}"'}
+        'home_coordenador.html',
+        {
+            'projetos': projetos,
+            'equipes': equipes
+        }
     )
 
 
-def sair(request):
-    """
-    Faz logout do usuário e redireciona para a página de login.
-    """
-    logout(request)
-    return redirect('login')
+# =========================
+# CRIAR PROJETO
+# =========================
+@login_required
+def criar_projeto(request):
+    if request.user.tipo != 'coordenador':
+        return redirect('login')
+
+    if request.method == 'POST':
+        form = ProjetoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home_coordenador')
+    else:
+        form = ProjetoForm()
+
+    return render(request, 'criar_projeto.html', {'form': form})
 
 
-class IsCoordenadorOrProfessor(permissions.BasePermission):
-    """
-    Coordenador: pode fazer tudo.
-    Professor: pode criar/deletar projetos e gerenciar alunos.
-    Aluno: apenas GET (read-only).
-    """
-    def has_permission(self, request, view):
-        if request.user.is_authenticated:
-            if request.user.tipo == 'coordenador':
-                return True
-            elif request.user.tipo == 'professor':
-                return True
-            elif request.user.tipo == 'estudante':
-                return request.method in permissions.SAFE_METHODS
-        return False
+# =========================
+# CRIAR EQUIPE
+# =========================
+@login_required
+def criar_equipe(request):
+    if request.user.tipo != 'coordenador':
+        return redirect('login')
+
+    if request.method == 'POST':
+        form = CriarEquipeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home_coordenador')
+    else:
+        form = CriarEquipeForm()
+
+    return render(request, 'criar_equipe.html', {'form': form})
 
 
-class ProjetoViewSet(viewsets.ModelViewSet):
-    """
-    API de Projetos
-    """
-    queryset = Projeto.objects.all()
-    serializer_class = ProjetoSerializer
-    permission_classes = [IsCoordenadorOrProfessor]
+# =========================
+# HOME PROFESSOR
+# =========================
+@login_required
+def home_professor(request):
+    if request.user.tipo != 'professor':
+        return redirect('login')
+
+    projetos = Projeto.objects.filter(professor_responsavel=request.user)
+    equipes = Equipe.objects.filter(projetos__in=projetos).distinct()
+
+    return render(
+        request,
+        'home_professor.html',
+        {
+            'projetos': projetos,
+            'equipes': equipes
+        }
+    )
 
 
-class ParticipacaoProjetoViewSet(viewsets.ModelViewSet):
-    """
-    API de Participações em Projetos
-    """
-    queryset = ParticipacaoProjeto.objects.all()
-    serializer_class = ParticipacaoProjetoSerializer
-    permission_classes = [IsCoordenadorOrProfessor]
+# =========================
+# HOME ESTUDANTE
+# =========================
+@login_required
+def home_estudante(request):
+    if request.user.tipo != 'estudante':
+        return redirect('login')
 
+    participacoes_equipes = ParticipacaoEquipe.objects.filter(usuario=request.user)
+    equipes = Equipe.objects.filter(
+        participacaoequipe__in=participacoes_equipes
+    ).distinct()
 
-@login_required(login_url='login')
-def redirecionar_usuario(request):
-    if request.user.is_superuser:
-        return redirect('/admin/')
-    return redirect('home')
+    projetos = Projeto.objects.filter(equipe__in=equipes).distinct()
 
-
-# ================= Funções adicionais para a home =================
-@login_required(login_url='login')
-def lista_projetos(request):
-    projetos = Projeto.objects.all()
-    context = {'projetos': projetos}
-    return render(request, 'lista_projetos.html', context)
-
-
-@login_required(login_url='login')
-def lista_equipes(request):
-    participacoes = ParticipacaoProjeto.objects.all()
-    context = {'participacoes': participacoes}
-    return render(request, 'lista_equipes.html', context)
+    return render(
+        request,
+        'home_estudante.html',
+        {
+            'projetos': projetos,
+            'equipes': equipes
+        }
+    )

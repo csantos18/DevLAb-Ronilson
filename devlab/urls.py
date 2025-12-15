@@ -1,36 +1,25 @@
 from django.contrib import admin
-from django.urls import path, include
-from api_projetos import views as projetos_views
+from django.urls import path
 from api_usuarios import views as usuarios_views
-from django.contrib.auth import views as auth_views
+from api_projetos import views as projetos_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # Home (decide a home pelo tipo do usuário)
-    path('', projetos_views.home, name='home'),
+    # Login / Logout
+    path('', usuarios_views.login_view, name='login'),
+    path('logout/', usuarios_views.logout_view, name='logout'),
 
-    # Login e Logout
-    path(
-        'accounts/login/',
-        auth_views.LoginView.as_view(
-            template_name='registration/login.html',
-            redirect_authenticated_user=True
-        ),
-        name='login'
-    ),
-    path(
-        'accounts/logout/',
-        projetos_views.sair,
-        name='logout'
-    ),
+    # Home por tipo de usuário
+    path('home/coordenador/', projetos_views.home_coordenador, name='home_coordenador'),
+    path('home/professor/', projetos_views.home_professor, name='home_professor'),
+    path('home/estudante/', projetos_views.home_estudante, name='home_estudante'),
 
-    # Botões da home
-    path('usuarios/<str:tipo>/', usuarios_views.usuarios_filtrados, name='usuarios_filtrados'),
-    path('projetos/lista/', projetos_views.lista_projetos, name='lista_projetos'),
-    path('equipes/lista/', projetos_views.lista_equipes, name='lista_equipes'),
+    # PERFIL DO ESTUDANTE
+    path('editar-perfil/', usuarios_views.editar_perfil, name='editar_perfil'),
+    path('ver-perfil/', usuarios_views.ver_perfil, name='ver_perfil'),  # ✅ Corrigido: adicionada view ver_perfil
 
-    # APIs
-    path('api/alunos/', include('api_usuarios.urls')),
-    path('api/projetos/', include('api_projetos.urls')),
+    # Criar Projeto / Equipe (somente coordenador)
+    path('projetos/criar/', projetos_views.criar_projeto, name='criar_projeto'),
+    path('equipes/criar/', projetos_views.criar_equipe, name='criar_equipe'),
 ]

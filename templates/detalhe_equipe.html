@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Detalhes da Equipe: {{ equipe.nome }}</h1>
+<p><strong>Projeto:</strong> {{ equipe.projeto.titulo }}</p>
+<p><strong>Líder:</strong> {{ equipe.lider.username }}</p>
+
+<h2>Participações</h2>
+<ul>
+    {% for part in participacoes %}
+    <li>{{ part.usuario.username }} - {{ part.papel }}</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'home_coordenador' %}">Voltar</a>
+{% endblock %}

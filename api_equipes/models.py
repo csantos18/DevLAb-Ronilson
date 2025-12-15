@@ -1,29 +1,37 @@
-from  django.db import models
-from api_usuarios.models import Usuario
+from django.db import models
 from api_projetos.models import Projeto
+from api_usuarios.models import Usuario
 
-
-# Create your models here.
 class Equipe(models.Model):
-    id = models.AutoField(primary_key=True)
     nome = models.CharField(max_length=100)
-    descricao = models.TextField(blank=True)
-
-    projeto = models.ForeignKey(
-        Projeto,
-        on_delete=models.CASCADE,
-        related_name='equipes'
-    )
-
+    descricao = models.TextField(blank=True, null=True)
     lider = models.ForeignKey(
-        Usuario,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        limit_choices_to={'tipo': 'Estudante'},
+        Usuario, 
+        on_delete=models.SET_NULL, 
+        null=True, 
         related_name='equipes_lideradas'
+    )
+    projeto = models.ForeignKey(
+        Projeto, 
+        on_delete=models.CASCADE, 
+        related_name='equipes'
     )
 
     def __str__(self):
         return self.nome
-    
+
+class ParticipacaoEquipe(models.Model):
+    usuario = models.ForeignKey(
+        Usuario, 
+        on_delete=models.CASCADE, 
+        related_name='participacoes_equipes'
+    )
+    equipe = models.ForeignKey(
+        Equipe, 
+        on_delete=models.CASCADE, 
+        related_name='participacoes'
+    )
+    data_entrada = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.usuario.username} - {self.equipe.nome}"

@@ -1,76 +1,63 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Home Estudante - DevLab</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+{% extends 'base.html' %}
+{% block content %}
 
-    <style>
-        body {
-            background: url("{% static 'img/fundo.jpg' %}") no-repeat center center fixed;
-            background-size: cover;
-            font-family: 'Montserrat', sans-serif;
-            color: white;
-        }
-        header {
-            background: rgba(0, 40, 80, 0.85);
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        main {
-            background: rgba(0, 0, 0, 0.55);
-            max-width: 600px;
-            margin: 80px auto;
-            padding: 40px;
-            border-radius: 12px;
-            text-align: center;
-        }
-        button {
-            background: #1e90ff;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #0f6fdc;
-        }
-        footer {
-            text-align: center;
-            margin-top: 60px;
-            color: #ddd;
-        }
-    </style>
-</head>
-<body>
-
-<header>
-    <div><strong>DevLab</strong></div>
-    <div>
-        Olá, {{ user.username }} |
-        <a href="{% url 'logout' %}" style="color:#aee1ff;">Sair</a>
-    </div>
-</header>
-
-<main>
-    <h2>Painel do Estudante</h2>
-    <p>Você está logado como <strong>ALUNO</strong></p>
-
-    <br>
-    <a href="{% url 'lista_projetos' %}">
-        <button>Projetos</button>
+<!-- MENU DO ESTUDANTE -->
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'editar_perfil' %}">
+        <button style="background-color: #007bff; color: white; padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer;">
+            Editar Perfil
+        </button>
     </a>
-</main>
 
-<footer>
-    © 2025 DevLab - Liana | Daiane | Ronilson
-</footer>
+    <a href="{% url 'ver_perfil' %}">
+        <button style="background-color: #17a2b8; color: white; padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer;">
+            Ver Perfil
+        </button>
+    </a>
+</div>
 
-</body>
-</html>
+<h1 style="color: #007bff;">Home do Estudante</h1>
+
+<h2 style="margin-top: 30px;">Projetos que você participa</h2>
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+    <tr style="background-color: #f2f2f2;">
+        <th>Título</th>
+        <th>Cliente</th>
+        <th>Status</th>
+        <th>Professor Responsável</th>
+    </tr>
+    {% for projeto in projetos %}
+    <tr>
+        <td>{{ projeto.titulo }}</td>
+        <td>{{ projeto.cliente }}</td>
+        <td>{{ projeto.status }}</td>
+        <td>{{ projeto.professor_responsavel.username }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4" style="text-align: center;">Você não participa de nenhum projeto.</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2 style="margin-top: 30px;">Equipes que você participa</h2>
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+    <tr style="background-color: #f2f2f2;">
+        <th>Nome da Equipe</th>
+        <th>Projeto</th>
+        <th>Líder</th>
+    </tr>
+    {% for equipe in equipes %}
+    <tr>
+        <td>{{ equipe.nome }}</td>
+        <td>{{ equipe.projeto.titulo }}</td>
+        <td>{{ equipe.lider.username }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="3" style="text-align: center;">Você não participa de nenhuma equipe.</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
