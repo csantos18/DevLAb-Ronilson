@@ -127,9 +127,16 @@ O sistema implementa autenticação para controle de acesso às rotas sensíveis
 git clone https://github.com/Roni403/DevLAb-Ronilson.git
 cd DevLAb-Ronilson
 
-✅ O que mudou para padronizar:  
-1. Removi todos os emojis para uniformidade.  
-2. Substituí setas (`→`, `↔`) por palavras (“para” ou “com”).  
-3. Mantive Markdown consistente: `#`, `##`, `###` para títulos, `-` para listas, `---` para separadores.  
-4. Mantive blocos de código com \`\`\` para comandos.
+---
+
+## 👨‍💻 Contribuição – Eduardo Neves
+
+### Alterações realizadas no README
+- Remoção de emojis para padronização visual
+- Substituição de símbolos (→, ↔) por termos textuais
+- Padronização do Markdown (títulos, listas e separadores)
+- Organização e revisão da seção de instalação e execução
+
+📅 Dezembro/2025
+
 
