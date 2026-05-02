@@ -1,8 +1,12 @@
 # DevLAb Ronilson
 
-Projeto Django desenvolvido como prática acadêmica para gestão de eventos, usuários, equipes e projetos.
+Projeto Django desenvolvido como prática acadêmica no **Instituto Federal de Brasília (IFB), Campus Gama**, em Brasília-DF.
 
-A aplicação reúne uma API back-end com Django e Django REST Framework, estrutura modular por apps e páginas/templates para apoio ao fluxo do sistema.
+A aplicação reúne uma base web com Django e Django REST Framework, organizada em apps para usuários, equipes e projetos. O foco do repositório é demonstrar evolução em back-end, estruturação de projeto, documentação e boas práticas de versionamento.
+
+## Contexto Acadêmico
+
+Este projeto faz parte de atividades de estudo e participação acadêmica no **IFB Campus Gama**, unidade do Instituto Federal de Brasília localizada na região administrativa do Gama, em Brasília-DF. Ele não deve ser lido como produto final de produção, mas como registro prático de aprendizado em desenvolvimento web com Python e Django.
 
 ## Objetivo
 
@@ -47,6 +51,15 @@ Instale as dependências:
 pip install -r requirements.txt
 ```
 
+Configure as variáveis de ambiente com base em `.env.example`:
+
+```text
+DJANGO_SECRET_KEY=troque-esta-chave-em-producao
+DJANGO_DEBUG=True
+DJANGO_ALLOWED_HOSTS=127.0.0.1,localhost
+DJANGO_CORS_ALLOW_ALL_ORIGINS=True
+```
+
 Execute as migrações:
 
 ```bash
@@ -80,11 +93,34 @@ http://127.0.0.1:8000/
 └── README.md
 ```
 
+## Qualidade e Segurança
+
+Com as dependências instaladas, valide o projeto com:
+
+```bash
+python manage.py check
+```
+
+Para uma checagem mais próxima de produção:
+
+```powershell
+$env:DJANGO_DEBUG="False"
+$env:DJANGO_SECRET_KEY="uma-chave-segura-com-mais-de-cinquenta-caracteres-para-teste"
+$env:DJANGO_ALLOWED_HOSTS="127.0.0.1,localhost"
+$env:DJANGO_CORS_ALLOW_ALL_ORIGINS="False"
+$env:DJANGO_SECURE_SSL_REDIRECT="True"
+python manage.py check --deploy
+```
+
+O projeto usa configurações por variável de ambiente para evitar segredo fixo no código e facilitar deploy em ambientes diferentes.
+
 ## Boas Práticas
 
 - Use ambiente virtual local (`.venv/`) em vez de versionar dependências instaladas.
 - Não publique `db.sqlite3`, arquivos `.env`, logs ou caches Python.
 - Atualize o `requirements.txt` quando adicionar dependências.
+- Em produção, defina `DJANGO_DEBUG=False`, configure `DJANGO_ALLOWED_HOSTS` e use uma `DJANGO_SECRET_KEY` forte.
+- Libere CORS apenas para origens conhecidas usando `DJANGO_CORS_ALLOWED_ORIGINS`.
 
 ## Status
 
