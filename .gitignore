@@ -5,7 +5,11 @@ db.sqlite3
 *.log
 *.env
 venv/
+.venv/
+sistem/
 .env/
+staticfiles/
+media/
 *.DS_Store
 *.idea/
 *.vscode/

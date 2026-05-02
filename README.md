@@ -1,156 +1,91 @@
-md
-# Projeto Integrador – Sistema de Gestão de Eventos
+# DevLAb Ronilson
 
-## Descrição do Projeto
-Este projeto consiste no desenvolvimento de uma **API Backend para Gestão de Eventos**, criada como parte do Projeto Integrador do curso.  
-O sistema tem como objetivo centralizar e organizar informações relacionadas a eventos acadêmicos e corporativos, como congressos, conferências, semanas acadêmicas e feiras.
+Projeto Django desenvolvido como prática acadêmica para gestão de eventos, usuários, equipes e projetos.
 
-A aplicação permite o gerenciamento de:
-- Eventos
-- Participantes
-- Atividades (palestras, workshops, oficinas)
-- Relacionamentos entre essas entidades
+A aplicação reúne uma API back-end com Django e Django REST Framework, estrutura modular por apps e páginas/templates para apoio ao fluxo do sistema.
 
-A solução evita o uso de planilhas e formulários dispersos, garantindo maior controle, integridade dos dados e facilidade de gestão.
+## Objetivo
 
----
+Construir uma base de sistema web para organizar informações acadêmicas e administrativas, com entidades separadas por domínio e possibilidade de evolução para uma API REST completa.
 
-## Objetivo Geral
-Desenvolver uma **API Backend com autenticação**, capaz de realizar operações completas de cadastro, consulta, atualização e exclusão (CRUD) das entidades do sistema, além de disponibilizar rotas que evidenciem os relacionamentos entre eventos, participantes e atividades.
+## Funcionalidades
 
----
+- Cadastro e organização de usuários.
+- Cadastro e organização de equipes.
+- Cadastro e organização de projetos.
+- Estrutura Django separada em apps.
+- Templates e arquivos estáticos para interface web.
+- Base preparada para rotas e integrações com Django REST Framework.
 
-## Escopo do Sistema
+## Tecnologias
 
-### Entidades Principais
-
-**Evento**
-- nome
-- descrição
-- data_início
-- data_fim
-- local
-
-**Participante**
-- nome
-- email
-- celular
-- tipo (estudante, convidado, palestrante, etc.)
-
-**Atividade**
-- título
-- descrição
-- horário_início
-- horário_fim
-- tipo (workshop, palestra, oficina, etc.)
-
----
-
-## Relacionamentos
-
-- **1:N — Evento para Atividade**  
-  Um evento pode possuir várias atividades, enquanto cada atividade pertence a apenas um evento.
-
-- **N:N — Evento com Participante**  
-  Um participante pode se inscrever em vários eventos, e um evento pode possuir vários participantes.
-
-- **1:1 (ou 1:N) — Atividade com Participante (Responsável)**  
-  Cada atividade possui um participante responsável, como um palestrante ou facilitador.
-
----
-
-## Funcionalidades da API
-
-### Rotas CRUD (todas as entidades)
-- GET – Listar e detalhar registros
-- POST – Criar registros
-- PUT / PATCH – Atualizar registros
-- DELETE – Remover registros
-
----
-
-### Rotas de Relacionamento
-
-**Participantes de um Evento (N:N)**
-- `GET /eventos/{id}/participantes`
-- `POST /eventos/{id}/participantes`
-
-**Atividades de um Evento (1:N)**
-- `GET /eventos/{id}/atividades`
-- `POST /eventos/{id}/atividades`
-
-**Responsável por Atividade**
-- `GET /atividades/{id}/responsavel`
-- `PUT /atividades/{id}/responsavel`
-
----
-
-### Rota Composta (A-B-C)
-- `GET /eventos/{id}/dashboard`
-
-Retorna:
-- Dados do evento
-- Lista de atividades
-- Responsável por cada atividade
-- Lista de participantes do evento
-
----
-
-## Autenticação
-
-O sistema implementa autenticação para controle de acesso às rotas sensíveis.
-
-### Rotas Protegidas
-- Criar, editar e deletar eventos
-- Criar, editar e deletar atividades
-- Definir responsável por atividade
-- Inscrever participantes em eventos
-
-### Rotas Públicas
-- Listagem de eventos
-- Listagem de atividades
-
----
-
-## Tecnologias Utilizadas
 - Python 3
-- Django
-- Django Rest Framework
-- SQLite (ambiente de desenvolvimento)
+- Django 5
+- Django REST Framework
+- SQLite em desenvolvimento
+- HTML, CSS e templates Django
 
----
+## Como Rodar
 
-## Instalação e Execução
+Clone o repositório:
 
-### 1. Clonar o repositório
 ```bash
-git clone https://github.com/Roni403/DevLAb-Ronilson.git
+git clone https://github.com/csantos18/DevLAb-Ronilson.git
 cd DevLAb-Ronilson
+```
 
----
+Crie e ative um ambiente virtual:
 
-## 👨‍💻 Contribuição – Eduardo Neves
+```bash
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
 
-### Alterações realizadas no README
-- Padronização visual e textual (remoção de emojis, substituição de símbolos → por termos textuais)
-- Organização das seções de instalação, execução e informações do projeto
-- Revisão geral do Markdown para melhor legibilidade
+Instale as dependências:
 
-📅 Dezembro/2025
+```bash
+pip install -r requirements.txt
+```
 
----
+Execute as migrações:
 
-# Projeto DevLAb-Ronilson
+```bash
+python manage.py migrate
+```
 
-Este repositório contém o projeto Django desenvolvido como trabalho para avaliação.
+Inicie o servidor:
 
-### Informações importantes
-- Servidor de desenvolvimento: http://127.0.0.1:8000/
-- Superusuário criado para acessar o admin: `csantos`
-- Commit de teste incluído para garantir que a entrega seja visível no repositório
+```bash
+python manage.py runserver
+```
 
-### Como rodar o projeto
-1. Ative o ambiente virtual:
-   ```bash
-   source sistem/Scripts/activate   # Git Bash
-   .\sistem\Scripts\Activate.ps1    # PowerShell
+Acesse:
+
+```text
+http://127.0.0.1:8000/
+```
+
+## Estrutura
+
+```text
+.
+├── api_equipes/      # App de equipes
+├── api_projetos/     # App de projetos
+├── api_usuarios/     # App de usuários
+├── devlab/           # Configuração principal do Django
+├── static/           # Arquivos estáticos
+├── templates/        # Templates HTML
+├── manage.py
+├── requirements.txt
+└── README.md
+```
+
+## Boas Práticas
+
+- Use ambiente virtual local (`.venv/`) em vez de versionar dependências instaladas.
+- Não publique `db.sqlite3`, arquivos `.env`, logs ou caches Python.
+- Atualize o `requirements.txt` quando adicionar dependências.
+
+## Status
+
+Projeto acadêmico em evolução.
